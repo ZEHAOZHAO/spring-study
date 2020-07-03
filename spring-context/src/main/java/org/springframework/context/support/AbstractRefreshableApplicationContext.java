@@ -132,8 +132,10 @@ public abstract class AbstractRefreshableApplicationContext extends AbstractAppl
 			DefaultListableBeanFactory beanFactory = createBeanFactory();
 			beanFactory.setSerializationId(getId());
 			//对Ioc容器进行定制化 如设置启动参数 开启注解的自动装配
+			//定义beanFactory 设置相关性 包括循环依赖 @Qualifier @Autowired 注解解析器
 			customizeBeanFactory(beanFactory);
 			//调用载入bean定义的方法,这里又使用了一个委派模式,在当前类中只定义了抽象的loadBeanDefinitions()方法,调用子类容器实现
+			//初始化DocumentReader 并对Xml文件读取以及解析
 			loadBeanDefinitions(beanFactory);
 			synchronized (this.beanFactoryMonitor) {
 				this.beanFactory = beanFactory;
@@ -226,6 +228,7 @@ public abstract class AbstractRefreshableApplicationContext extends AbstractAppl
 	 * @see DefaultListableBeanFactory#setAllowEagerClassLoading
 	 */
 	protected void customizeBeanFactory(DefaultListableBeanFactory beanFactory) {
+		//此属性的含义是否允许同名称不同定义的对象
 		if (this.allowBeanDefinitionOverriding != null) {
 			beanFactory.setAllowBeanDefinitionOverriding(this.allowBeanDefinitionOverriding);
 		}

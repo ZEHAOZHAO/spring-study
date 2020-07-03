@@ -516,10 +516,12 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 		synchronized (this.startupShutdownMonitor) {
 			// Prepare this context for refreshing.
 			//调用容器准备刷新的方法,获取容器当前的时间,同时给容器设置同步标识
+			//对系统属性、环境变量进行初始化
 			prepareRefresh();
 
 			// Tell the subclass to refresh the internal bean factory.
 			//告诉子类启动refreshBeanFactory()方法  Bean定义资源文件的载入从子类的refreshBeanFactory()
+			//获取beanFactory  次方法之后就拥有了beanFactory的所有特性
 			ConfigurableListableBeanFactory beanFactory = obtainFreshBeanFactory();
 
 			// Prepare the bean factory for use in this context.
@@ -612,10 +614,12 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 		}
 
 		// Initialize any placeholder property sources in the context environment.
+		//留给子类覆盖
 		initPropertySources();
 
 		// Validate that all properties marked as required are resolvable:
 		// see ConfigurablePropertyResolver#setRequiredProperties
+		//验证需要的属性文件是否都已经放入环境中
 		getEnvironment().validateRequiredProperties();
 
 		// Store pre-refresh ApplicationListeners...
@@ -651,6 +655,7 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 	protected ConfigurableListableBeanFactory obtainFreshBeanFactory() {
 		//启动容器载入bean的配置信息
 		//这里使用委派模式 父类定义了抽象的refreshBeanFactory方法,具体实现调用子类容器的refreshBeanFactory方法
+		//初始化beanFactory
 		refreshBeanFactory();
 		return getBeanFactory();
 	}
