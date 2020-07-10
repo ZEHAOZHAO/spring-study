@@ -547,7 +547,7 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 				initMessageSource();
 
 				// Initialize event multicaster for this context.
-				//初始化容器事件传播器
+				//初始化容器事件传播器  事件监听
 				initApplicationEventMulticaster();
 
 				// Initialize other special beans in specific context subclasses.
@@ -559,7 +559,7 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 				registerListeners();
 
 				// Instantiate all remaining (non-lazy-init) singletons.
-				//初始化所有剩余的单例bean
+				//初始化所有剩余的非延迟加载的单例bean
 				finishBeanFactoryInitialization(beanFactory);
 
 				// Last step: publish corresponding event.
@@ -667,8 +667,11 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 	 */
 	protected void prepareBeanFactory(ConfigurableListableBeanFactory beanFactory) {
 		// Tell the internal bean factory to use the context's class loader etc.
+		//设置beanFactory的classLoad为当前的classLoader
 		beanFactory.setBeanClassLoader(getClassLoader());
+		//设置表达式语言处理器 spring3之后支持表达式语言 #{bean.xxx}
 		beanFactory.setBeanExpressionResolver(new StandardBeanExpressionResolver(beanFactory.getBeanClassLoader()));
+		//bean的属性设置管理工具
 		beanFactory.addPropertyEditorRegistrar(new ResourceEditorRegistrar(this, getEnvironment()));
 
 		// Configure the bean factory with context callbacks.
